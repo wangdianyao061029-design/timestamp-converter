@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="免费在线时间戳转换工具，Unix时间戳与日期互转，支持秒/毫秒，实时显示当前时间戳。">
-<title>时间戳转换器 - Unix Timestamp 在线转换</title>
+<meta name="description" content="Free online Unix timestamp converter. Convert between Unix timestamps and human-readable dates. Supports seconds and milliseconds. Local processing.">
+<title data-i18n="title">Timestamp Converter - Unix Timestamp Online Tool</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fafafa;color:#1a1a2e;min-height:100vh}
 .container{max-width:680px;margin:0 auto;padding:24px 16px}
-header{text-align:center;padding:32px 0 16px}
+header{text-align:center;padding:24px 0 8px;position:relative}
 header h1{font-size:28px;font-weight:700;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-header p{color:#666;margin-top:6px;font-size:14px}
+header p{color:#666;margin-top:4px;font-size:14px}
+.lang-switch{position:absolute;top:24px;right:0;display:flex;gap:2px;background:#eee;border-radius:16px;padding:2px}
+.lang-switch button{padding:5px 12px;border:none;border-radius:14px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:#999;transition:all .2s}
+.lang-switch button.active{background:#fff;color:#333;box-shadow:0 1px 2px rgba(0,0,0,.1)}
 .now-card{background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:16px;padding:28px 24px;text-align:center;color:#fff;margin-bottom:20px}
 .now-card .label-text{font-size:12px;opacity:.8;margin-bottom:4px}
 .now-card .ts{font-size:36px;font-weight:800;font-family:'SF Mono','Fira Code','Consolas',monospace;letter-spacing:-1px}
@@ -33,70 +36,85 @@ header p{color:#666;margin-top:6px;font-size:14px}
 .ads-placeholder{margin-top:24px;padding:20px;background:#fff;border-radius:12px;text-align:center;color:#ccc;font-size:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 24px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
 .toast.show{opacity:1}
-footer{text-align:center;padding:32px 0;color:#999;font-size:12px}
+footer{text-align:center;padding:24px 0;color:#999;font-size:12px}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>⏱ 时间戳转换器</h1>
-    <p>Unix 时间戳 ↔ 日期时间 互转 · 纯本地处理</p>
+    <div class="lang-switch">
+      <button class="active" onclick="setLang('zh')">中</button>
+      <button onclick="setLang('en')">EN</button>
+    </div>
+    <h1 data-i18n="h1">⏱ 时间戳转换器</h1>
+    <p data-i18n="subtitle">Unix 时间戳 ↔ 日期时间 互转 · 纯本地处理</p>
   </header>
 
   <div class="now-card">
-    <div class="label-text">当前时间戳（秒）</div>
+    <div class="label-text" data-i18n="nowLabel">当前时间戳（秒）</div>
     <div class="ts" id="nowTs">-</div>
     <div class="ts-ms" id="nowTsMs">-</div>
     <div class="datetime" id="nowDate">-</div>
   </div>
 
   <div class="section">
-    <h3>📥 时间戳 → 日期</h3>
+    <h3 data-i18n="tsToDate">📥 时间戳 → 日期</h3>
     <div class="input-row">
-      <input type="number" id="tsInput" placeholder="输入时间戳，如 1700000000">
+      <input type="number" id="tsInput" placeholder="">
       <select id="tsUnit">
-        <option value="s">秒</option>
-        <option value="ms">毫秒</option>
+        <option value="s" data-i18n="seconds">秒</option>
+        <option value="ms" data-i18n="milliseconds">毫秒</option>
       </select>
     </div>
     <div class="quick-timestamps">
-      <button onclick="setTs(0)">Unix 纪元</button>
-      <button onclick="setTs(Math.floor(Date.now()/1000))">现在</button>
-      <button onclick="setTs(Math.floor(Date.now()/1000)-86400)">昨天</button>
-      <button onclick="setTs(Math.floor(Date.now()/1000)+86400)">明天</button>
+      <button onclick="setTs(0)" data-i18n="epoch">Unix 纪元</button>
+      <button onclick="setTs(Math.floor(Date.now()/1000))" data-i18n="now">现在</button>
+      <button onclick="setTs(Math.floor(Date.now()/1000)-86400)" data-i18n="yesterday">昨天</button>
+      <button onclick="setTs(Math.floor(Date.now()/1000)+86400)" data-i18n="tomorrow">明天</button>
     </div>
-    <div class="result empty" id="tsResult">输入时间戳查看结果</div>
+    <div class="result empty" id="tsResult" data-i18n="tsPlaceholder">输入时间戳查看结果</div>
   </div>
 
   <div class="section">
-    <h3>📅 日期 → 时间戳</h3>
+    <h3 data-i18n="dateToTs">📅 日期 → 时间戳</h3>
     <div class="input-row">
       <input type="datetime-local" id="dateInput">
     </div>
-    <div class="result empty" id="dateResult">选择日期查看结果</div>
+    <div class="result empty" id="dateResult" data-i18n="datePlaceholder">选择日期查看结果</div>
   </div>
 
   <div class="ads-placeholder">
-    <p style="margin:0">📢 广告位 — Google AdSense</p>
+    <p style="margin:0" data-i18n="adPlaceholder">📢 广告位 — Google AdSense</p>
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<footer><p>所有处理均在浏览器本地完成。</p></footer>
+<footer><p data-i18n="footer">所有处理均在浏览器本地完成。</p></footer>
 
 <script>
+const i18n={
+zh:{title:"时间戳转换器 - Unix Timestamp 在线转换",h1:"⏱ 时间戳转换器",subtitle:"Unix 时间戳 ↔ 日期时间 互转 · 纯本地处理",nowLabel:"当前时间戳（秒）",tsToDate:"📥 时间戳 → 日期",dateToTs:"📅 日期 → 时间戳",seconds:"秒",milliseconds:"毫秒",epoch:"Unix 纪元",now:"现在",yesterday:"昨天",tomorrow:"明天",tsPlaceholder:"输入时间戳查看结果",datePlaceholder:"选择日期查看结果",invalid:"请输入有效数字",weekday:"周",copied:"已复制 ✓",adPlaceholder:"📢 广告位 — Google AdSense",footer:"所有处理均在浏览器本地完成。"},
+en:{title:"Timestamp Converter - Unix Timestamp Online Tool",h1:"⏱ Timestamp Converter",subtitle:"Unix Timestamp ↔ Date · Local processing",nowLabel:"Current Timestamp (seconds)",tsToDate:"📥 Timestamp → Date",dateToTs:"📅 Date → Timestamp",seconds:"Seconds",milliseconds:"Milliseconds",epoch:"Unix Epoch",now:"Now",yesterday:"Yesterday",tomorrow:"Tomorrow",tsPlaceholder:"Enter a timestamp to see the result",datePlaceholder:"Select a date to see the result",invalid:"Please enter a valid number",weekday:"",copied:"Copied ✓",adPlaceholder:"📢 Ad Space — Google AdSense",footer:"All processing is done locally in your browser."}
+};
+let lang='zh';
+const weekdaysZH=['周日','周一','周二','周三','周四','周五','周六'];
+const weekdaysEN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function setLang(l){lang=l;document.documentElement.lang=l==='zh'?'zh-CN':'en';document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',(b.textContent==='中'&&l==='zh')||(b.textContent==='EN'&&l==='en')));document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(el.tagName==='TITLE'){document.title=i18n[l][k]}else if(el.tagName==='OPTION'){el.textContent=i18n[l][k]}else if(k in i18n[l]){el.textContent=lang==='zh'?i18n.zh[k]:i18n.en[k]}});tsInput.placeholder=i18n[l].tsPlaceholder;tsInput.dispatchEvent(new Event('input'));dateInput.dispatchEvent(new Event('change'));updateNow()}
+function t(k){return i18n[lang][k]||k}
+
 const nowTs=document.getElementById('nowTs'),nowTsMs=document.getElementById('nowTsMs'),nowDate=document.getElementById('nowDate'),tsInput=document.getElementById('tsInput'),tsUnit=document.getElementById('tsUnit'),tsResult=document.getElementById('tsResult'),dateInput=document.getElementById('dateInput'),dateResult=document.getElementById('dateResult'),toast=document.getElementById('toast');
 
-function updateNow(){const now=Date.now();nowTs.textContent=Math.floor(now/1000);nowTsMs.textContent=now+' (毫秒)';nowDate.textContent=new Date(now).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}
+function updateNow(){const now=Date.now();nowTs.textContent=Math.floor(now/1000);nowTsMs.textContent=now+' ('+t('milliseconds')+')';const wd=lang==='zh'?weekdaysZH:weekdaysEN;nowDate.textContent=new Date(now).toLocaleString(lang==='zh'?'zh-CN':'en-US',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'short'})}
 updateNow();setInterval(updateNow,1000);
 
-function fmtDate(ts){const d=new Date(ts);return d.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'short'})+' | UTC: '+d.toUTCString()+' | ISO: '+d.toISOString()}
+function fmtDate(ts){const d=new Date(ts);const locale=lang==='zh'?'zh-CN':'en-US';return d.toLocaleString(locale,{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'short'})+' | UTC: '+d.toUTCString()+' | ISO: '+d.toISOString()}
 
-tsInput.addEventListener('input',()=>{const v=tsInput.value.trim();if(!v){tsResult.textContent='输入时间戳查看结果';tsResult.className='result empty';return}const n=parseInt(v);if(isNaN(n)){tsResult.textContent='请输入有效数字';tsResult.className='result empty';return}const ms=tsUnit.value==='s'?n*1000:n;tsResult.className='result';tsResult.innerHTML=fmtDate(ms)+'<button class="copy-btn" onclick="copyText(this)">📋 复制</button>'});
+tsInput.addEventListener('input',()=>{const v=tsInput.value.trim();if(!v){tsResult.textContent=t('tsPlaceholder');tsResult.className='result empty';return}const n=parseInt(v);if(isNaN(n)){tsResult.textContent=t('invalid');tsResult.className='result empty';return}const ms=tsUnit.value==='s'?n*1000:n;tsResult.className='result';tsResult.innerHTML=fmtDate(ms)+'<button class="copy-btn" onclick="copyText(this)">📋 '+t('copy').replace(' ✓','')+'</button>'});
 tsUnit.addEventListener('change',()=>tsInput.dispatchEvent(new Event('input')));
-dateInput.addEventListener('change',()=>{const v=dateInput.value;if(!v){dateResult.textContent='选择日期查看结果';dateResult.className='result empty';return}const d=new Date(v);const s=Math.floor(d.getTime()/1000);const ms=d.getTime();dateResult.className='result';dateResult.innerHTML='秒: <b>'+s+'</b> &nbsp;|&nbsp; 毫秒: <b>'+ms+'</b>'+'<button class="copy-btn" onclick="copyText(this)">📋 复制</button>'});
+dateInput.addEventListener('change',()=>{const v=dateInput.value;if(!v){dateResult.textContent=t('datePlaceholder');dateResult.className='result empty';return}const d=new Date(v);const s=Math.floor(d.getTime()/1000);const ms=d.getTime();dateResult.className='result';dateResult.innerHTML=t('seconds')+': <b>'+s+'</b> &nbsp;|&nbsp; '+t('milliseconds')+': <b>'+ms+'</b>'+'<button class="copy-btn" onclick="copyText(this)">📋 Copy</button>'});
 
 function setTs(v){tsInput.value=v;tsInput.dispatchEvent(new Event('input'))}
-function copyText(btn){const text=btn.parentElement.textContent.replace('📋 复制','').trim();navigator.clipboard.writeText(text).then(()=>{showToast('已复制 ✓')}).catch(()=>showToast('复制失败'))}
+function copyText(btn){const text=btn.parentElement.textContent.replace(/📋.*$/,'').trim();navigator.clipboard.writeText(text).then(()=>{showToast(t('copied'))}).catch(()=>showToast('Copy failed'))}
 
 dateInput.value=new Date().toISOString().slice(0,16);
 let toastTimer;function showToast(msg){clearTimeout(toastTimer);toast.textContent=msg;toast.classList.add('show');toastTimer=setTimeout(()=>toast.classList.remove('show'),2000)}
